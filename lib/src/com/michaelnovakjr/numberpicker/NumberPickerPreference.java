@@ -50,6 +50,7 @@ public class NumberPickerPreference extends DialogPreference {
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
+                callChangeListener(mPicker.getCurrent());
                 saveValue(mPicker.getCurrent());
                 break;
             default:
