@@ -47,6 +47,10 @@ public class NumberPickerPreference extends DialogPreference {
         mPicker.setCurrent(getValue());
     }
 
+    public int getValue() {
+        return getSharedPreferences().getInt(getKey(), mDefault);
+    }
+
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
@@ -62,12 +66,15 @@ public class NumberPickerPreference extends DialogPreference {
         mPicker.setRange(start, end);
     }
 
+    public void setValue(int val) {
+        mDefault = val;
+        if (mPicker != null) {
+            mPicker.setCurrent(val);
+        }
+    }
+
     private void saveValue(int val) {
         getEditor().putInt(getKey(), val).commit();
         notifyChanged();
-    }
-
-    private int getValue() {
-        return getSharedPreferences().getInt(getKey(), mDefault);
     }
 }
