@@ -13,6 +13,7 @@ public class NumberPickerPreference extends DialogPreference {
     private int mStartRange;
     private int mEndRange;
     private int mDefault;
+    private int mValue;
 
     public NumberPickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -25,6 +26,7 @@ public class NumberPickerPreference extends DialogPreference {
         mStartRange = arr.getInteger(R.styleable.numberpicker_startRange, 0);
         mEndRange = arr.getInteger(R.styleable.numberpicker_endRange, 200);
         mDefault = arr.getInteger(R.styleable.numberpicker_defaultValue, 0);
+        mValue = mDefault;
 
         arr.recycle();
 
@@ -48,7 +50,11 @@ public class NumberPickerPreference extends DialogPreference {
     }
 
     public int getValue() {
-        return getSharedPreferences().getInt(getKey(), mDefault);
+        if (isPersistent()) {
+            return getSharedPreferences().getInt(getKey(), mDefault);
+        } else {
+            return mValue;
+        }
     }
 
     public void onClick(DialogInterface dialog, int which) {
@@ -67,14 +73,17 @@ public class NumberPickerPreference extends DialogPreference {
     }
 
     public void setValue(int val) {
-        mDefault = val;
+        mValue = val;
         if (mPicker != null) {
             mPicker.setCurrent(val);
         }
     }
 
     private void saveValue(int val) {
-        getEditor().putInt(getKey(), val).commit();
+        mValue = val;
+        if (isPersistent()) {
+            getEditor().putInt(getKey(), val).commit();
+        }
         notifyChanged();
     }
 }
